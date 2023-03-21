@@ -105,18 +105,18 @@ const ShowComponent: React.FunctionComponent<ShowProps> = () => {
 
   return (
     <Box
-      height="100%"
+      // height="100%"
       display="flex"
       alignItems="center"
       justifyContent="center"
-      // position="relative"
+      position="relative"
     >
       {searchItems?.items?.map(e => {
         return (
           <Card
-            m={3}
             sx={{
               maxWidth: "600px",
+              margin: "80px 15px 15px",
             }}
           >
             {e.data.map(d => {
@@ -140,7 +140,6 @@ const ShowComponent: React.FunctionComponent<ShowProps> = () => {
                       flexDirection="column"
                       alignItems="center"
                       mb={2}
-                      minHeight="600px"
                     >
                       {e.links.length !== 0 ? (
                         <Image
@@ -180,9 +179,7 @@ const ShowComponent: React.FunctionComponent<ShowProps> = () => {
                         })}
                       </Box>
 
-                      <Text sx={{ height: "100px", overflowY: "scroll" }}>
-                        {d.description}
-                      </Text>
+                      <Text>{d.description}</Text>
                     </Box>
 
                     <Text color="gray.500" as="i">
