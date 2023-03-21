@@ -26,3 +26,11 @@ export type SearchTermLinksType = {
   rel: string;
   render?: string;
 };
+
+export type MediaAssetType = {
+  version: string;
+  href: string;
+  items: {
+    href: string;
+  }[];
+};

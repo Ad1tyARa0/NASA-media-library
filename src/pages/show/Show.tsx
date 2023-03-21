@@ -1,12 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  fetchAsset,
-  fetchCaptions,
-  fetchMetaData,
-  getSearchResults,
-} from "../../api/search";
-import { NasaMediaCollectionType } from "../../utils/types";
+import { getSearchResults } from "../../api/search";
+import { fetchAsset } from "../../api/show";
+import { MediaAssetType, NasaMediaCollectionType } from "../../utils/types";
 import {
   Box,
   Button,
@@ -27,6 +23,7 @@ interface ShowProps {}
 const ShowComponent: React.FunctionComponent<ShowProps> = () => {
   const { id } = useParams();
   const [showIsLoading, setShowIsLoading] = useState<boolean>(false);
+  const [, setMediaAssets] = useState<MediaAssetType>({} as MediaAssetType);
   const [assetsIsLoading, setAssetsIsLoading] = useState<boolean>(false);
   const [searchItems, setSearchItems] = useState<NasaMediaCollectionType>(
     {} as NasaMediaCollectionType
@@ -65,8 +62,9 @@ const ShowComponent: React.FunctionComponent<ShowProps> = () => {
 
     try {
       const response = await fetchAsset({ nasa_id: id });
-
       console.log(response);
+
+      setMediaAssets(response.collection);
       setAssetsIsLoading(false);
     } catch (error) {
       setAssetsIsLoading(false);
@@ -111,7 +109,7 @@ const ShowComponent: React.FunctionComponent<ShowProps> = () => {
       display="flex"
       alignItems="center"
       justifyContent="center"
-      position="relative"
+      // position="relative"
     >
       {searchItems?.items?.map(e => {
         return (
@@ -142,44 +140,49 @@ const ShowComponent: React.FunctionComponent<ShowProps> = () => {
                       flexDirection="column"
                       alignItems="center"
                       mb={2}
+                      minHeight="600px"
                     >
-                      {e.links.map(l => {
-                        return (
-                          <Image
-                            src={l.href}
-                            alt="thumbnail"
-                            height="400px"
-                            width="600px"
-                            backgroundSize="cover"
-                            sx={{ aspectRatio: 1 }}
-                            mb={2}
-                          />
-                        );
-                      })}
+                      {e.links.length !== 0 ? (
+                        <Image
+                          src={e.links[0].href}
+                          alt="thumbnail"
+                          width="inherit"
+                          height="inherit"
+                          backgroundSize="cover"
+                          sx={{ aspectRatio: 1 }}
+                          mb={2}
+                        />
+                      ) : null}
 
                       <Box
                         display="flex"
                         width="100%"
                         alignItems="center"
                         justifyContent="flex-start"
+                        flexWrap="wrap"
                         mb={2}
                       >
                         {d.keywords.map(k => {
                           return (
                             <Tag
-                              size="sm"
+                              size="md"
                               key={k}
                               variant="solid"
                               colorScheme="purple"
-                              mr={2}
+                              mt={1}
+                              mr={1}
+                              mb={1}
+                              textTransform="capitalize"
                             >
-                              {k}
+                              {k.toLowerCase()}
                             </Tag>
                           );
                         })}
                       </Box>
 
-                      <Text>{d.description}</Text>
+                      <Text sx={{ height: "100px", overflowY: "scroll" }}>
+                        {d.description}
+                      </Text>
                     </Box>
 
                     <Text color="gray.500" as="i">

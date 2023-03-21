@@ -34,6 +34,13 @@ const SearchComponent: React.FunctionComponent<SearchProps> = () => {
     setSearchTerm(payload);
   };
 
+  const handleClickEnter = (key: string) => {
+    console.log(key);
+    if (key === "Enter" && searchTerm.length !== 0) {
+      fetchSearchResults();
+    }
+  };
+
   const fetchSearchResults = useCallback(async () => {
     if (searchTerm.trim().length === 0) {
       return;
@@ -46,7 +53,6 @@ const SearchComponent: React.FunctionComponent<SearchProps> = () => {
 
       setSearchIsLoading(false);
       setSearchItems(response.collection.items);
-      setSearchTerm("");
     } catch (error) {
       setSearchIsLoading(false);
 
@@ -70,14 +76,26 @@ const SearchComponent: React.FunctionComponent<SearchProps> = () => {
                 maxWidth: "1000px",
               }}
             >
-              <CardBody p={5}>
+              <CardBody p={3}>
                 {e.data.map(d => {
                   return (
-                    <Box>
+                    <Box display="flex" alignItems="flex-start">
+                      {e.links.length !== 0 && (
+                        <Image
+                          src={e.links[0].href}
+                          alt="thumbnail"
+                          height="100px"
+                          width="150px"
+                          marginRight="10px"
+                          backgroundSize="cover"
+                          sx={{ aspectRatio: 1, marginTop: "4px" }}
+                        />
+                      )}
+
                       <Box
                         cursor="pointer"
                         display="flex"
-                        alignContent="center"
+                        flex={1}
                         onClick={() => navigate(`/show/${d.nasa_id}`)}
                       >
                         <Heading
@@ -97,24 +115,6 @@ const SearchComponent: React.FunctionComponent<SearchProps> = () => {
                         >
                           <LinkIcon color="purple" />
                         </Box>
-                      </Box>
-
-                      <Divider orientation="horizontal" mb={3} pt={2} />
-
-                      <Box display="flex" alignItems="flex-start">
-                        {e.links.length !== 0 && (
-                          <Image
-                            src={e.links[0].href}
-                            alt="thumbnail"
-                            height="100px"
-                            width="150px"
-                            marginRight="10px"
-                            backgroundSize="cover"
-                            sx={{ aspectRatio: 1 }}
-                          />
-                        )}
-
-                        <Text>{d.description}</Text>
                       </Box>
                     </Box>
                   );
@@ -163,6 +163,7 @@ const SearchComponent: React.FunctionComponent<SearchProps> = () => {
               onChange={({ currentTarget }) =>
                 handleChangeSearchTerm(currentTarget.value)
               }
+              onKeyDown={event => handleClickEnter(event.key)}
             />
           </InputGroup>
 
