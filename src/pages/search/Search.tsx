@@ -77,7 +77,7 @@ const SearchComponent: React.FunctionComponent<SearchProps> = () => {
               }}
             >
               <CardBody p={3}>
-                {e.data.map(d => {
+                {e?.data?.map(d => {
                   return (
                     <Box display="flex" alignItems="flex-start">
                       {e.links.length !== 0 && (

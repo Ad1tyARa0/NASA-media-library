@@ -161,7 +161,7 @@ const ShowComponent: React.FunctionComponent<ShowProps> = () => {
                         flexWrap="wrap"
                         mb={2}
                       >
-                        {d.keywords.map(k => {
+                        {d?.keywords?.map(k => {
                           return (
                             <Tag
                               size="md"
